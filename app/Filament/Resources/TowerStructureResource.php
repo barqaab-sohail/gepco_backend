@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TowerStructureResource\Pages;
-use App\Filament\Resources\TowerStructureResource\RelationManagers;
-use App\Models\TowerStructure;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\TowerStructure;
+use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\TowerStructureResource\Pages;
+use App\Filament\Resources\TowerStructureResource\RelationManagers;
 
 class TowerStructureResource extends Resource
 {
@@ -23,7 +25,7 @@ class TowerStructureResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')->required()->rules(['required']),
             ]);
     }
 
@@ -31,7 +33,7 @@ class TowerStructureResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')->label('Tower Structure Name'),
             ])
             ->filters([
                 //
