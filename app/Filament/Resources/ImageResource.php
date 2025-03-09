@@ -2,16 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ImageResource\Pages;
-use App\Filament\Resources\ImageResource\RelationManagers;
-use App\Models\Image;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Image;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\EarthingDetail;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ImageResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ImageResource\RelationManagers;
 
 class ImageResource extends Resource
 {
@@ -23,7 +28,11 @@ class ImageResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('earthing_detail_id')
+                    ->label('Earthing Detail')
+                    ->options(EarthingDetail::all()->pluck('latitude', 'id'))
+                    ->searchable()->required()->rules(['required']),
+                FileUpload::make('path')->label('Upload Image')->disk('public')->directory('images')->required()->rules(['required']),
             ]);
     }
 
@@ -31,7 +40,8 @@ class ImageResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('earthingDetail.feeder_name'),
+                ImageColumn::make('path'),
             ])
             ->filters([
                 //

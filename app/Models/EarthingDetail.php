@@ -13,4 +13,10 @@ class EarthingDetail extends Model
 
         return $this->hasOne(Image::class);
     }
+
+    public function images()
+    {
+
+        return $this->hasMany(Image::class);
+    }
 }

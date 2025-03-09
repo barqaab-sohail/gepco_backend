@@ -67,7 +67,7 @@ class EarthingDetailResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('feeder_name'),
-                ImageColumn::make('image.path'),
+                ImageColumn::make('images.path'),
             ])
             ->filters([
                 //
