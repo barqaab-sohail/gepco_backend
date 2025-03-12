@@ -21,3 +21,4 @@ Route::post('/gepco/login', [LoginController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->get('/gepco/options', [GepcoController::class, 'options']);
 Route::middleware(['auth:sanctum'])->post('/gepco/earthingDetail', [GepcoController::class, 'earthingDetail']);
+Route::post('/gepco/save', [GepcoController::class, 'saveEarthingDetail']);

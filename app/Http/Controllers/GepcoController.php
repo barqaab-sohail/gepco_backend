@@ -66,4 +66,20 @@ class GepcoController extends Controller
 
         return  response()->json('Data Successfully Saved');
     }
+
+    public function saveEarthingDetail(Request $request)
+    {
+
+        $validated = $request->validate([
+            'image' => 'required',
+        ]);
+
+        $path = Storage::disk('public')->put('images', $request->file('image'));
+        Image::create([
+            'earthing_detail_id' => 7,
+            'path' => $path
+        ]);
+
+        return  response()->json('Data Successfully Saved');
+    }
 }

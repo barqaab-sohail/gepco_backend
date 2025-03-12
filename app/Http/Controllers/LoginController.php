@@ -39,10 +39,12 @@ class LoginController extends Controller
                 //$token = $user->createToken($user->email . '_token')->plainTextToken;
                 $user->tokens()->where('name', $user->email . '_token')->delete();
                 $token = $user->createToken($user->email . '_token')->plainTextToken;
+                $picture = $user->picture ? asset('/storage/' . $user->picture) : asset('/images/default.png');
                 return response()->json([
                     'status' => 200,
                     'userName' => $user->name,
                     'email' => $user->email,
+                    'picture' => $picture,
                     'token' => $token,
                     'message' => 'Loogged In Successfully',
                 ])->setStatusCode(200);
