@@ -76,7 +76,7 @@ class GepcoController extends Controller
 
         $path = Storage::disk('public')->put('images', $request->file('image'));
         Image::create([
-            'earthing_detail_id' => 7,
+            'earthing_detail_id' => 1,
             'path' => $path
         ]);
 
