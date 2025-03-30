@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Company;
 use App\Models\Division;
 use App\Models\SubDivision;
+use App\Models\Feeder;
 use Illuminate\Http\Request;
 use App\Models\EarthingDetail;
 use Illuminate\Support\Facades\Storage;
@@ -64,7 +65,7 @@ class GepcoController extends Controller
             'path' => $path
         ]);
 
-        return  response()->json('Data Successfully Saved');
+        return response()->json('Data Successfully Saved');
     }
 
     public function saveEarthingDetail(Request $request)
@@ -80,6 +81,30 @@ class GepcoController extends Controller
             'path' => $path
         ]);
 
-        return  response()->json('Data Successfully Saved');
+        return response()->json('Data Successfully Saved');
+    }
+
+    public function getDivisions($circleId)
+    {
+
+        $divisions = Division::select(['id', 'name'])->where('circle_id', $circleId)->get();
+
+        return response()->json($divisions);
+    }
+
+    public function getSubDivisions($divisionId)
+    {
+
+        $subDivisions = SubDivision::select(['id', 'name', 'code'])->where('division_id', $divisionId)->get();
+
+        return response()->json($subDivisions);
+    }
+
+    public function getFeeders($subDivisionId)
+    {
+
+        $feeders = Feeder::select(['id', 'name', 'feeder_code', 'category'])->where('sub_division_id', $subDivisionId)->get();
+
+        return response()->json($feeders);
     }
 }

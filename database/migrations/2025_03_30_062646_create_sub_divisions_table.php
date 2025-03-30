@@ -4,19 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('divisions', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
+        Schema::create('sub_divisions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('division_id')->constrained();
+            $table->foreignId('company_id')->constrained();
             $table->string('name');
-            $table->bigInteger('company_id')->unsigned()->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');;
+            $table->string('code');
             $table->timestamps();
+            $table->index('division_id');
         });
     }
 
@@ -25,6 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('divisions');
+        Schema::dropIfExists('sub_divisions');
+
+
     }
 };

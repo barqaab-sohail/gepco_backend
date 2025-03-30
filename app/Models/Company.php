@@ -8,4 +8,9 @@ class Company extends Model
 {
 
     protected $fillable = ['name'];
+
+    public function circles()
+    {
+        return $this->hasMany(Circle::class);
+    }
 }
