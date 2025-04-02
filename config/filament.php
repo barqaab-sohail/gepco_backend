@@ -86,11 +86,4 @@ return [
 
     'livewire_loading_delay' => 'default',
 
-    'auth' => [
-    'guard' => 'web',
-    'pages' => [
-            'login' => \Filament\Http\Livewire\Auth\Login::class,
-            ],
-    ],
-
 ];
