@@ -7,9 +7,14 @@ use Filament\Tables;
 use App\Models\Category;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Forms\Get;
+use App\Models\Company;
+use App\Models\Circle;
+use App\Models\Division;
 use App\Models\SubDivision;
 use App\Models\EarthingDetail;
 use App\Models\TowerStructure;
+use App\Models\Feeder;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
@@ -32,11 +37,33 @@ class EarthingDetailResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('feeder_name')->required()->rules(['required']),
+
+                Select::make('company_id')
+                    ->label('Company')
+                    ->options(Company::all()->pluck('name', 'id'))->live()
+                    ->searchable()->required()->rules(['required']),
+                Select::make('circle_id')
+                    ->label('Circle')
+                    ->disabled(fn(Get $get): bool => !filled($get('company_id')))
+                    ->options(fn(Get $get) => Circle::where('company_id', (int) $get('company_id'))->pluck('name', 'id'))
+                    ->required()->live(),
+                Select::make('division_id')
+                    ->label('Division')
+                    ->disabled(fn(Get $get): bool => !filled($get('circle_id')))
+                    ->options(fn(Get $get) => Division::where('circle_id', (int) $get('circle_id'))->pluck('name', 'id'))
+                    ->required()->live(),
                 Select::make('sub_division_id')
                     ->label('Sub Division')
-                    ->options(SubDivision::all()->pluck('name', 'id'))
-                    ->searchable()->required()->rules(['required']),
+                    ->disabled(fn(Get $get): bool => !filled($get('division_id')))
+                    ->options(fn(Get $get) => SubDivision::where('division_id', (int) $get('division_id'))->pluck('name', 'id'))
+                    ->required()->live(),
+
+                Select::make('feeder_id')
+                    ->label('Feeder Name')
+                    ->disabled(fn(Get $get): bool => !filled($get('sub_division_id')))
+                    ->options(fn(Get $get) => Feeder::where('sub_division_id', (int) $get('sub_division_id'))->pluck('name', 'id'))
+                    ->required(),
+
                 Select::make('category_id')
                     ->label('Category')
                     ->options(Category::all()->pluck('name', 'id'))
@@ -66,7 +93,7 @@ class EarthingDetailResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('feeder_name'),
+                TextColumn::make('feeder.name'),
                 ImageColumn::make('images.path'),
             ])
             ->filters([
