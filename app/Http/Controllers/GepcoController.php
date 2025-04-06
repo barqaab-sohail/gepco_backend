@@ -27,7 +27,7 @@ class GepcoController extends Controller
     public function earthingDetail(Request $request)
     {
         $validated = $request->validate([
-            'feeder_name' => 'required|max:191',
+            'feeder_id' => 'required',
             'sub_division_id' => 'required',
             'category_id' => 'required',
             'tower_structure_id' => 'required',
@@ -41,7 +41,7 @@ class GepcoController extends Controller
         ]);
 
         $data = EarthingDetail::create([
-            'feeder_name' => $request->feeder_name,
+            'feeder_id' => $request->feeder_id,
             'sub_division_id' => $request->sub_division_id,
             'category_id' => $request->category_id,
             'tower_structure_id' => $request->tower_structure_id,
@@ -74,6 +74,9 @@ class GepcoController extends Controller
         $validated = $request->validate([
             'image' => 'required',
         ]);
+
+
+
 
         $path = Storage::disk('public')->put('images', $request->file('image'));
         Image::create([
