@@ -7,6 +7,8 @@ use App\Models\Company;
 use App\Models\Division;
 use App\Models\SubDivision;
 use App\Models\Feeder;
+use App\Models\Category;
+use App\Models\TowerStructure;
 use Illuminate\Http\Request;
 use App\Models\EarthingDetail;
 use Illuminate\Support\Facades\Storage;
@@ -25,60 +27,60 @@ class GepcoController extends Controller
     }
 
     public function earthingDetail(Request $request)
-{
-    $validated = $request->validate([
-        'feeder_id' => 'required|integer',
-        'category_id' => 'required|integer',
-        'tower_structure_id' => 'required|integer',
-        'latitude' => 'required|numeric',
-        'longitude' => 'required|numeric',
-        'tage_no' => 'required|string',
-        'chemical' => 'required|string',
-        'rod' => 'required|string',
-        'earth_wire' => 'required|string',
-        'earthing_after' => 'required|string',
-        'image' => 'required|image|max:2048', // 2MB max
-    ]);
-
-    try {
-        $data = EarthingDetail::create([
-            'feeder_id' => $request->feeder_id,
-            'category_id' => $request->category_id,
-            'tower_structure_id' => $request->tower_structure_id,
-            'location' => $request->location ?? null,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'tage_no' => $request->tage_no,
-            'chemical' => $request->chemical,
-            'rod' => $request->rod,
-            'earth_wire' => $request->earth_wire,
-            'earthing_before' => $request->earthing_before ?? null,
-            'earthing_after' => $request->earthing_after,
+    {
+        $validated = $request->validate([
+            'feeder_id' => 'required|integer',
+            'category_id' => 'required|integer',
+            'tower_structure_id' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'tage_no' => 'required|string',
+            'chemical' => 'required|string',
+            'rod' => 'required|string',
+            'earth_wire' => 'required|string',
+            'earthing_after' => 'required|string',
+            'image' => 'required|image|max:2048', // 2MB max
         ]);
 
-        // Store file
-        $path = $request->file('image')->store('images', 'public');
-        
-        Image::create([
-            'earthing_detail_id' => $data->id,
-            'path' => $path
-        ]);
+        try {
+            $data = EarthingDetail::create([
+                'feeder_id' => $request->feeder_id,
+                'category_id' => $request->category_id,
+                'tower_structure_id' => $request->tower_structure_id,
+                'location' => $request->location ?? null,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'tage_no' => $request->tage_no,
+                'chemical' => $request->chemical,
+                'rod' => $request->rod,
+                'earth_wire' => $request->earth_wire,
+                'earthing_before' => $request->earthing_before ?? null,
+                'earthing_after' => $request->earthing_after,
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data successfully saved',
-            'data' => $data
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to save data',
-            'error' => $e->getMessage()
-        ], 500);
+            // Store file
+            $path = $request->file('image')->store('images', 'public');
+
+            Image::create([
+                'earthing_detail_id' => $data->id,
+                'path' => $path
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data successfully saved',
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to save data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
 
+    // Temprorey Function for testing purpose
     public function saveEarthingDetail(Request $request)
     {
 
@@ -118,7 +120,13 @@ class GepcoController extends Controller
     {
 
         $feeders = Feeder::select(['id', 'name', 'feeder_code', 'category'])->where('sub_division_id', $subDivisionId)->get();
-
         return response()->json($feeders);
+    }
+
+    public function getData()
+    {
+        $categories = Category::select(['id', 'name'])->get();
+        $towerStructures = TowerStructure::select(['id', 'name'])->get();
+        return response()->json(['categories' => $categories, 'towerStructures' => $towerStructures]);
     }
 }
