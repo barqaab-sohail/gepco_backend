@@ -41,28 +41,25 @@ class EarthingDetailResource extends Resource
                 Select::make('company_id')
                     ->label('Company')
                     ->options(Company::all()->pluck('name', 'id'))->live()
-                    ->searchable()->required()->rules(['required']),
+                    ->searchable(),
                 Select::make('circle_id')
                     ->label('Circle')
                     ->disabled(fn(Get $get): bool => !filled($get('company_id')))
-                    ->options(fn(Get $get) => Circle::where('company_id', (int) $get('company_id'))->pluck('name', 'id'))
-                    ->required()->live(),
+                    ->options(fn(Get $get) => Circle::where('company_id', (int) $get('company_id'))->pluck('name', 'id'))->live(),
                 Select::make('division_id')
                     ->label('Division')
                     ->disabled(fn(Get $get): bool => !filled($get('circle_id')))
-                    ->options(fn(Get $get) => Division::where('circle_id', (int) $get('circle_id'))->pluck('name', 'id'))
-                    ->required()->live(),
+                    ->options(fn(Get $get) => Division::where('circle_id', (int) $get('circle_id'))->pluck('name', 'id'))->live(),
                 Select::make('sub_division_id')
                     ->label('Sub Division')
                     ->disabled(fn(Get $get): bool => !filled($get('division_id')))
-                    ->options(fn(Get $get) => SubDivision::where('division_id', (int) $get('division_id'))->pluck('name', 'id'))
-                    ->required()->live(),
+                    ->options(fn(Get $get) => SubDivision::where('division_id', (int) $get('division_id'))->pluck('name', 'id'))->live(),
 
                 Select::make('feeder_id')
                     ->label('Feeder Name')
                     ->disabled(fn(Get $get): bool => !filled($get('sub_division_id')))
                     ->options(fn(Get $get) => Feeder::where('sub_division_id', (int) $get('sub_division_id'))->pluck('name', 'id'))
-                    ->required(),
+                    ->required()->rules(['required']),
 
                 Select::make('category_id')
                     ->label('Category')

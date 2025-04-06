@@ -35,4 +35,18 @@ class Feeder extends Model
     {
         return $this->belongsTo(SubDivision::class);
     }
+
+    public function company()
+    {
+        return $this->hasOneThrough(
+            Company::class,       // The target model
+            Circle::class,        // The intermediate model
+            'id',                // Foreign key on the circles table (referencing feeder.circle_id)
+            'id',                // Foreign key on the companies table (referencing circle.company_id)
+            'circle_id',         // Local key on feeders table
+            'company_id'         // Local key on circles table
+        );
+    }
+
+    
 }

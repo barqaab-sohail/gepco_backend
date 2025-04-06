@@ -29,8 +29,8 @@ class ImageResource extends Resource
         return $form
             ->schema([
                 Select::make('earthing_detail_id')
-                    ->label('Earthing Detail')
-                    ->options(EarthingDetail::all()->pluck('latitude', 'id'))
+                    ->label('Tag No')
+                    ->options(EarthingDetail::all()->pluck('tage_no', 'id'))
                     ->searchable()->required()->rules(['required']),
                 FileUpload::make('path')->label('Upload Image')->disk('public')->directory('images')->required()->rules(['required']),
             ]);
@@ -40,7 +40,7 @@ class ImageResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('earthingDetail.feeder_name'),
+                TextColumn::make('feeder.name'),
                 ImageColumn::make('path'),
             ])
             ->filters([

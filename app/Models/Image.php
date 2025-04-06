@@ -12,4 +12,8 @@ class Image extends Model
     {
         return $this->belongsTo(EarthingDetail::class);
     }
+
+    public function feeder(){
+        return $this->hasOneThrough(Feeder::class, EarthingDetail::class,'id','id','');
+    }
 }

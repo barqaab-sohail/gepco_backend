@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->decimal('longitude', 12, 9);
             $table->string('tage_no');
             $table->string('chemical');
-            $table->integer('Rod');
+            $table->integer('rod');
             $table->decimal('earth_wire', 4, 2);
             $table->decimal('earthing_before', 3, 2)->nullable();
             $table->decimal('earthing_after', 3, 2);
