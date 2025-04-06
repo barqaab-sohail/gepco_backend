@@ -23,7 +23,6 @@ return new class extends Migration {
             $table->decimal('earth_wire', 4, 2);
             $table->decimal('earthing_before', 3, 2)->nullable();
             $table->decimal('earthing_after', 3, 2);
-            $table->foreignId('sub_division_id')->constrained();
             $table->foreignId('category_id')->constrained();
             $table->foreignId('tower_structure_id')->constrained();
             $table->timestamps();
