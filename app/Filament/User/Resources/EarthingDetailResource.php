@@ -1,34 +1,24 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\User\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Circle;
-use App\Models\Feeder;
-use App\Models\Company;
-use Filament\Forms\Get;
-use App\Models\Category;
-use App\Models\Division;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use App\Models\SubDivision;
 use App\Models\EarthingDetail;
-use App\Models\TowerStructure;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Resource;
+use Illuminate\Support\Collection;
 use Filament\Tables\Actions\Action;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Facades\Storage;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\EarthingDetailResource\Pages;
-use App\Filament\Resources\EarthingDetailResource\RelationManagers;
+use App\Filament\User\Resources\EarthingDetailResource\Pages;
+use App\Filament\User\Resources\EarthingDetailResource\RelationManagers;
+
 
 class EarthingDetailResource extends Resource
 {
@@ -40,85 +30,14 @@ class EarthingDetailResource extends Resource
     {
         return $form
             ->schema([
-
-                Select::make('company_id')
-                    ->label('Company')
-                    ->options(
-                        fn(Get $get, ?EarthingDetail $record) =>
-                        Company::query()->pluck('name', 'id') // load all for company
-                    )
-                    ->searchable()
-                    ->live()
-                    ->default(fn(?EarthingDetail $record) => $record?->company?->id),
-
-                Select::make('circle_id')
-                    ->label('Circle')
-                    ->options(
-                        fn(Get $get, ?EarthingDetail $record) =>
-                        Circle::where('id', $record?->circle?->id)->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->live()
-                    ->disabled(fn(Get $get) => !filled($get('feeder_id')))
-                    ->default(fn(?EarthingDetail $record) => $record?->circle?->id),
-
-                Select::make('division_id')
-                    ->label('Division')
-                    ->options(
-                        fn(Get $get, ?EarthingDetail $record) =>
-                        Division::where('id', $record?->division->id)->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->live()
-                    ->disabled(fn(Get $get) => !filled($get('feeder_id')))
-                    ->default(fn(?EarthingDetail $record) => $record?->division->id),
-
-                Select::make('sub_division_id')
-                    ->label('Sub Division')
-                    ->options(
-                        fn(Get $get, ?EarthingDetail $record) =>
-                        SubDivision::where('id',  $record?->subDivision->id)->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->live()
-                    ->disabled(fn(Get $get) => !filled($get('feeder_id')))
-                    ->default(fn(?EarthingDetail $record) => $record?->subDivision->id),
-
-                Select::make('feeder_id')
-                    ->label('Feeder')
-                    ->options(
-                        fn(Get $get, ?EarthingDetail $record) =>
-                        Feeder::where('id', $get('feeder_id') ?? $record?->feeder_id)->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->required()
-                    ->rules(['required'])
-                    ->disabled(fn(Get $get) => !filled($get('feeder_id')))
-                    ->default(fn(?EarthingDetail $record) => $record?->feeder_id),
-
-                Select::make('category_id')
-                    ->label('Category')
-                    ->options(Category::all()->pluck('name', 'id'))
-                    ->searchable()->required()->rules(['required']),
-                Select::make('tower_structure_id')
-                    ->label('Structure Type')
-                    ->options(TowerStructure::all()->pluck('name', 'id'))
-                    ->searchable()->required()->rules(['required']),
-                TextInput::make('location'),
-                TextInput::make('latitude')->required()->rules(['required']),
-                TextInput::make('longitude')->required()->rules(['required']),
-                TextInput::make('tage_no')->required()->rules(['required']),
-                TextInput::make('chemical')->required()->rules(['required']),
-                TextInput::make('rod')->required()->rules(['required']),
-                TextInput::make('earth_wire')->required()->rules(['required']),
-                TextInput::make('earthing_before'),
-                TextInput::make('earthing_after')->required()->rules(['required']),
-                Fieldset::make('image')->label('')
-                    ->relationship('image')
-                    ->schema([
-                        FileUpload::make('path')->label('Upload Image')->disk('public')->directory('images')->required()->rules(['required']),
-                    ]),
+                //
             ]);
+    }
+
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 
     public static function table(Table $table): Table
@@ -139,7 +58,7 @@ class EarthingDetailResource extends Resource
                 TextColumn::make('earthing_after'),
                 ImageColumn::make('images.path'),
 
-            ])
+            ])->recordUrl(null)
             ->filters([
                 // Text input filter for tag number
 
